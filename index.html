@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NTX SCENTS | Perfumería</title>
+<style>
+:root{--bg:#090909;--gold:#d9aa45;--white:#fff;--muted:#bbb;--card:#151515;--green:#16c76b}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#0a0a0a;color:#fff}
+header{position:sticky;top:0;z-index:5;background:#090909eF;border-bottom:1px solid #333;display:flex;align-items:center;justify-content:space-between;padding:14px 5%}
+.logo{font-size:28px;font-weight:800;letter-spacing:5px}.logo span{display:block;font-size:10px;letter-spacing:7px;text-align:center;color:var(--gold)}
+nav a{color:#fff;text-decoration:none;margin:0 10px;font-size:14px}.cart{background:var(--gold);color:#111;border:0;border-radius:20px;padding:10px 15px;font-weight:bold}
+.hero{min-height:470px;padding:70px 7%;display:flex;align-items:center;background:linear-gradient(90deg,#050505 15%,#050505aa 55%,#05050555),url('https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=1800&q=80') center/cover}
+.hero h1{font-size:54px;max-width:620px;margin:0 0 15px}.hero p{font-size:18px;color:#ddd}.btn{display:inline-block;background:var(--gold);color:#111;padding:13px 20px;border-radius:5px;text-decoration:none;font-weight:bold;margin-top:15px}
+section{padding:45px 6%}.cats,.products{display:grid;gap:18px}.cats{grid-template-columns:repeat(4,1fr)}.cat{padding:28px 18px;border:1px solid #66552e;border-radius:8px;background:#111;text-align:center;font-size:20px}.products{grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}
+.card{background:#fff;color:#111;border-radius:9px;padding:14px}.card img{width:100%;height:230px;object-fit:contain;background:#f4f4f4;border-radius:6px}.card h3{margin:12px 0 5px}.price{font-size:20px;font-weight:bold}.add{width:100%;padding:11px;margin-top:12px;background:#111;color:#fff;border:0;border-radius:5px;cursor:pointer}
+footer{padding:35px 6%;background:#050505;text-align:center;border-top:1px solid #333}.wa{position:fixed;right:20px;bottom:20px;background:var(--green);color:#fff;padding:15px 18px;border-radius:30px;text-decoration:none;font-weight:bold;z-index:9}
+@media(max-width:700px){nav{display:none}.hero h1{font-size:38px}.cats{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">NTX<span>SCENTS</span></div>
+  <nav><a href="#inicio">Inicio</a><a href="#hombre">Hombre</a><a href="#mujer">Mujer</a><a href="#arabes">Árabes</a><a href="#disenador">Diseñador</a></nav>
+  <button class="cart" onclick="openCart()">🛒 Carrito (<span id="count">0</span>)</button>
+</header>
+
+<main id="inicio">
+<section class="hero">
+<div><h1>Más que un aroma,<br>es tu esencia.</h1><p>Perfumes originales • Calidad • Envíos a todo EE.UU.</p><a class="btn" href="#productos">Explorar catálogo</a></div>
+</section>
+
+<section>
+<h2>Nuestras categorías</h2>
+<div class="cats">
+<div class="cat" id="hombre">👔 Hombre</div><div class="cat" id="mujer">🌸 Mujer</div><div class="cat" id="arabes">🕌 Árabes</div><div class="cat" id="disenador">💎 Diseñador</div>
+</div>
+</section>
+
+<section id="productos"><h2>Productos destacados</h2><div class="products" id="productGrid"></div></section>
+</main>
+
+<div id="cartBox" style="display:none;position:fixed;right:15px;top:80px;width:min(390px,92vw);background:#171717;border:1px solid #555;border-radius:10px;padding:20px;z-index:10;box-shadow:0 10px 40px #000">
+<h2>Tu carrito</h2><div id="cartItems"></div><h3>Total: $<span id="total">0.00</span></h3>
+<button class="btn" onclick="checkout()">Continuar al pago</button>
+<button onclick="closeCart()" style="margin-left:8px;padding:10px">Cerrar</button>
+</div>
+
+<a class="wa" id="wa" target="_blank">WhatsApp</a>
+<footer><h2>Gracias por usar y preferir NTX SCENTS</h2><p>Tu confianza nos motiva a seguir creciendo.</p><p>Perfumes originales • Envíos a todo EE.UU.</p></footer>
+
+<script>
+const WHATSAPP="14437138277"; // Pon aquí tu número con código de país, por ejemplo 13055551234
+const products=[
+{name:"Bleu de Chanel",cat:"Hombre",price:89.99,img:"https://images.unsplash.com/photo-1557170334-a9632e77c6e4?auto=format&fit=crop&w=700&q=80"},
+{name:"Bright Crystal",cat:"Mujer",price:69.99,img:"https://images.unsplash.com/photo-1588405748880-12d1d2a59f75?auto=format&fit=crop&w=700&q=80"},
+{name:"1 Million",cat:"Hombre",price:74.99,img:"https://images.unsplash.com/photo-1547887538-e3a2f32cb1cc?auto=format&fit=crop&w=700&q=80"},
+{name:"Asad",cat:"Árabe",price:59.99,img:"https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?auto=format&fit=crop&w=700&q=80"},
+{name:"Sauvage",cat:"Diseñador",price:89.99,img:"https://images.unsplash.com/photo-1594035910387-fea47794261f?auto=format&fit=crop&w=700&q=80"}
+];
+let cart=[];
+const grid=document.getElementById("productGrid");
+products.forEach((p,i)=>grid.innerHTML+=`<article class="card"><img src="${p.img}" alt="${p.name}"><h3>${p.name}</h3><small>${p.cat}</small><p class="price">$${p.price.toFixed(2)}</p><button class="add" onclick="add(${i})">🛒 Agregar al carrito</button></article>`);
+function add(i){cart.push(products[i]);render();openCart()}
+function render(){document.getElementById("count").textContent=cart.length;document.getElementById("cartItems").innerHTML=cart.length?cart.map((p,i)=>`<p>${p.name} — $${p.price.toFixed(2)} <button onclick="removeItem(${i})">✕</button></p>`).join(""):"<p>Tu carrito está vacío.</p>";document.getElementById("total").textContent=cart.reduce((s,p)=>s+p.price,0).toFixed(2)}
+function removeItem(i){cart.splice(i,1);render()}
+function openCart(){document.getElementById("cartBox").style.display="block"}
+function closeCart(){document.getElementById("cartBox").style.display="none"}
+function checkout(){
+ if(!cart.length)return alert("Agrega al menos un perfume.");
+ const text="Hola NTX SCENTS, quiero hacer este pedido:%0A"+cart.map(p=>`• ${p.name} - $${p.price.toFixed(2)}`).join("%0A")+`%0A*Total: $${cart.reduce((s,p)=>s+p.price,0).toFixed(2)}*`;
+ if(WHATSAPP) location.href=`https://wa.me/${WHATSAPP}?text=${text}`;
+ else alert("Primero agrega tu número de WhatsApp en la variable WHATSAPP del archivo index.html. Para pagos con tarjeta, después podemos conectar Stripe.");
+}
+document.getElementById("wa").href=WHATSAPP?`https://wa.me/${WHATSAPP}`:"#";
+render();
+</script>
+</body></html>
