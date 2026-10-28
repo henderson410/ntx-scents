@@ -64,6 +64,7 @@ const products=[
  size:"3.4"},
 {name:"My Way",cat:"Mujer",price:150,img:"./IMG_2027.jpeg",size:"3.0 oz"}
 ];
+{name:"La Bomba Eau de Parfum",cat:"Mujer",price:165,img:"./la-bomba.png",size:"2.7 oz",notes:"Pitaya, peonía de cereza, frangipani rojo y vainilla solar",use:"Día, noche, citas y ocasiones especiales"},
 let cart=[];
 const grid=document.getElementById("productGrid");
 products.forEach((p,i)=>grid.innerHTML+=`<article class="card"><img src="${p.img}" alt="${p.name}"><h3>${p.name}</h3><small>${p.cat}</small><p class="price">$${p.price.toFixed(2)}</p><button class="add" onclick="add(${i})">🛒 Agregar al carrito</button></article>`);
